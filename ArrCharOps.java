@@ -24,6 +24,11 @@ public class ArrCharOps {
         System.out.println(compareTo("Zoo", "zoo"));
         System.out.println(hashCode(arr1));
         System.out.println(hashCode(arr2));
+        System.out.println("testing compareTo:");
+        System.out.println(compareTo("abc", "abc")); // = 0
+        System.out.println(compareTo("abc", "aBc")); // = 1
+        System.out.println(compareTo("abc", "abcd")); // = -1
+        System.out.println(compareTo("abc", "")); // = -2
     }
 
     /**
@@ -39,14 +44,8 @@ public class ArrCharOps {
     /**
      * Returns the char value at the specified index. Assume that the array is
      * non-empty.
-     * ['1', 'a', '!'], 0
-     * 0 1 2
-     * 
-     * 
      */
     public static char charAt(char[] arr, int index) {
-        // Replace the following statement with your code
-
         return arr[index];
     }
 
@@ -58,13 +57,11 @@ public class ArrCharOps {
         if (arr1.length != arr2.length) {
             return false;
         }
-
         for (int i = 0; i < arr1.length; i++) {
             if (arr1[i] != arr2[i]) {
                 return false;
             }
         }
-
         return true;
     }
 
@@ -74,12 +71,14 @@ public class ArrCharOps {
      * If no such character is found, returns -1.
      */
     public static int indexOf(char[] arr, char ch) {
+        if (arr.length == 0) {
+            return -1;
+        }
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] == ch) {
                 return i;
             }
         }
-
         return -1;
     }
 
@@ -87,8 +86,7 @@ public class ArrCharOps {
      * Same as indexOf(char[], char), but starts the search in the given index.
      */
     public static int indexOf(char[] arr, char ch, int fromIndex) {
-        // Replace the following statement with your code
-        for (int i = fromIndex; fromIndex < arr.length; i++) {
+        for (int i = fromIndex; i < arr.length; i++) {
             if (arr[i] == ch) {
                 return i;
             }
@@ -102,13 +100,11 @@ public class ArrCharOps {
      * If no such character is found, returns -1.
      */
     public static int lastIndexOf(char[] arr, char ch) {
-        for (int i = arr.length - 1; i >= 0; i--) {
+        for (int i = (arr.length - 1); i >= 0; i--) {
             if (arr[i] == ch) {
                 return i;
-
             }
         }
-
         return -1;
     }
 
@@ -116,17 +112,14 @@ public class ArrCharOps {
      * Returns an array which is the concatanation of the two given arrays.
      */
     public static char[] concat(char[] arr1, char[] arr2) {
-
-        char[] arr3 = new char[arr1.length + arr2.length];
+        char[] conc = new char[arr1.length + arr2.length];
         for (int i = 0; i < arr1.length; i++) {
-            arr3[i] = arr1[i];
+            conc[i] = arr1[i];
         }
-        for (int j = 0; j < arr2.length; j++) {
-
-            arr3[arr1.length + j] = arr2[j];
+        for (int j = arr1.length; j < conc.length; j++) {
+            conc[j] = arr2[j - arr1.length];
         }
-
-        return arr3;
+        return conc;
     }
 
     /**
@@ -138,14 +131,11 @@ public class ArrCharOps {
      * characters containing the characters "urge".
      */
     public static char[] subArray(char[] arr, int beginIndex, int endIndex) {
-        // Replace the following statement with your code
-        char[] arr3 = new char[beginIndex - endIndex];
-        int count = 0; // index of new array
+        char[] sub = new char[endIndex - beginIndex];
         for (int i = beginIndex; i < endIndex; i++) {
-            arr3[count] = arr[i];
-            count++;
+            sub[i - beginIndex] = arr[i];
         }
-        return arr3;
+        return sub;
     }
 
     /**
@@ -161,13 +151,19 @@ public class ArrCharOps {
      * The hash value of an empty array is zero.
      */
     public static long hashCode(char[] arr) {
-        int sum = 0;
+        int hashCode = 0, sw = 0;
         for (int i = 0; i < arr.length; i++) {
-            sum += arr[i] * Math.pow(7, (arr.length - 1) - i);
+            if (arr[i] != '\u0000') {
+                sw = 1;
+                hashCode += arr[i] * Math.pow(7, (arr.length - (i + 1)));
+            }
+        }
+        if (sw == 0) {
+            return 0;
+        } else {
+            return hashCode;
         }
 
-        // Replace the following statement with your code
-        return sum;
     }
 
     /**
@@ -201,9 +197,8 @@ public class ArrCharOps {
      */
     public static int compareTo(String str1, String str2) {
         if ((str1 == "") || (str2 == "")) {
-            return 2;
+            return -2;
         }
-
         int shorter = Math.min(str1.length(), str2.length());
         for (int i = 0; i < shorter; i++) {
             if (str1.charAt(i) > str2.charAt(i)) {
